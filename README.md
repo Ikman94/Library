@@ -3,7 +3,8 @@ The Small Libre
 This project is Library web application. You are able to post books by their title and author and give them a rating, 
 update the rating, search for a book. You are also able to delete a book. This was one of the exercises from the 
 Udacity FullStack Nano Degree course. This exercise was used in strengthing my skill in structuring and implementing well 
-formatted API endpoints.
+formatted API endpoints. I will continue working on this API and will be hoping I can collaborate with
+other developers and build something out of this
 
 Getting Started
 Developers using this project should have python3, pip and node already installed.

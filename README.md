@@ -1,115 +1,239 @@
-#### Pre-requisites
-* Developers using this project should already have Python3, pip and node installed on their local machines.
+The Small Libre
+
+This project is Library web application. You are able to post books by their title and author and give them a rating, 
+update the rating, search for a book. You are also able to delete a book. This was one of the exercises from the 
+Udacity FullStack Nano Degree course. This exercise was used in strengthing my skill in structuring and implementing well 
+formatted API endpoints.
+
+Getting Started
+Developers using this project should have python3, pip and node already installed.
 
 
-* **Start your virtual environment** 
-From the backend folder run
-```bash
-# Mac users
-python3 -m venv venv
-source venv/bin/activate
-# Windows users
-> py -3 -m venv venv
-> venv\Scripts\activate
-```
+Backend
+From the backend folder run pip install requirements.txt. All packages are included in the requirements file.
+To run the application run the following commands:
 
-* **Install dependencies**<br>
-From the backend folder run 
-```bash
-# All required packages are included in the requirements file. 
-pip3 install -r requirements.txt
-# In addition, you will need to UNINSTALL the following:
-pip3 uninstall flask-socketio -y
-```
-
-
-### Step 0: Start/Stop the PostgreSQL server
-Mac users can follow the commands below:
-```bash
-which postgres
-postgres --version
-# Start/stop
-pg_ctl -D /usr/local/var/postgres start
-pg_ctl -D /usr/local/var/postgres stop 
-```
-Windows users can follow the commands below:
-- Find the database directory, it should be something like that: *C:\Program Files\PostgreSQL\13.2\data*
-- Then, in the command line, execute the folllowing command: 
-```bash
-# Start the server
-pg_ctl -D "C:\Program Files\PostgreSQL\13.2\data" start
-# Stop the server
-pg_ctl -D "C:\Program Files\PostgreSQL\13.2\data" stop
-```
-If it shows that the *port already occupied* error, run:
-```bash
-sudo su - 
-ps -ef | grep postmaster | awk '{print $2}'
-kill <PID> 
-```
-
-### Step 1 - Create and Populate the database
-1. **Verify the database username**<br>
-Verify that the database user in the `/backend/books.psql`, `/backend/models.py`, and `/backend/test_flaskr.py` files must be either the `student` or `postgres` (default username). FYI, the classroom workspace uses the `student`/`student` user credentials, whereas, the local implementation can use the dafault `postgres` user without a password as well. (See the `/backend/setup.sql` for more details!)
-
-2. **Create the database and a user**<br>
-In your terminal, navigate to the */nd0044-c2-API-Development-and-Documentation-exercises/1_Requests_Starter/backend/* directory, and run the following:
-```bash
-cd nd0044-c2-API-Development-and-Documentation-exercises/1_Requests_Starter/backend
-# Connect to the PostgreSQL
-psql postgres
-#View all databases
-\l
-# Create the database, create a user - `student`, grant all privileges to the student
-\i setup.sql
-# Exit the PostgreSQL prompt
-\q
-```
-
-
-3. **Create tables**<br>
-Once your database is created, you can create tables (`bookshelf`) and apply contraints
-```bash
-# Mac users
-psql -f books.psql -U student -d bookshelf
-# Linux users
-su - postgres bash -c "psql bookshelf < /path/to/exercise/backend/books.psql"
-
-```
-**You can even drop the database and repopulate it, if needed, using the commands above.** 
-
-
-### Step 2: Complete the ToDos and Start the backend server
-```
 export FLASK_APP=flaskr
 export FLASK_ENV=development
 flask run
-```
-These commands put the application in development and directs our application to use the `__init__.py` file in our flaskr folder. Working in development mode shows an interactive debugger in the console and restarts the server whenever changes are made. If running locally on Windows, look for the commands in the [Flask documentation](http://flask.pocoo.org/docs/1.0/tutorial/factory/).
-
-The application will run on `http://127.0.0.1:5000/` by default and is set as a proxy in the frontend configuration. Also, the current version of the application does not require authentication or API keys. 
 
 
+Frontend
+From the frontend folder, run the following commands to start the client:
 
-### Step 3: Start the frontend
-(You can start the frontend even before the backend is up!)
-From the `frontend` folder, run the following commands to start the client: 
-```
 npm install // only once to install dependencies
 npm start 
-```
-By default, the frontend will run on `localhost:3000`. Close the terminal if you wish to stop the frontend server. 
+By default, the frontend will run on localhost:3000.
 
----
 
-## Additional information
-#### Running Tests
-If any exercise needs testing, navigate to the `/backend` folder and run the following commands: 
-```bash
-psql postgres
+Tests
+In order to run tests navigate to the backend folder and run the following commands:
+
 dropdb bookshelf_test
 createdb bookshelf_test
-\q
 psql bookshelf_test < books.psql
 python test_flaskr.py
-```
+
+
+API REFERENCE
+
+Just Getting Started? 
+The Library API is organized around REST. The API has predictable resource-oriented URLs,
+accepts form-encoded request bodies, returns JSON-encoded responses, and uses standard
+HTTP response codes, authentication, and verbs.
+
+### BASE URL
+http://127.0.0.1:5000/. At present this app is only run locallly and not hosted as a base
+URL from the backend and runs a proxy on the frontend.
+
+### AUTHENTICATION
+This version does not require authentification or API keys.
+
+### ERRORS
+Library uses conventional HTTP response codes to indicate the success or failure of
+an API request. In general: Codes in the 2xx range indicate success. Codes in the 
+4xx range indicate an error that failed given the information provided (e.g., a 
+required parameter was omitted, a charge failed, etc.). 
+
+### Error Handling
+Erros are returned in JSON objects in the following format:
+
+{
+    "success: "false",
+    "error": "404",
+    "mesage": "BAd Request"
+}
+
+
+The Library API will return this four errors when request fails
+HTTP STATUS CODE SUMMARY
+400 - Bad                   The request was unacceptable, often due to missing a required parameter.
+404 - Not Found	            The requested resource doesn't exist.
+422 - Uproccessable         The request could not be processed.
+405 - Method not allowed    The request is not allowed for the particular URL. 
+
+### RESOURCES
+Books
+
+Endpoint: 
+GET /books
+
+This represents a list of books books and total number of books. 
+Results are paginated in groups of 8, includes an argument to choose page number.
+
+Sample:
+$ curl http://127.0.0.1:5000/books
+
+The Books Object:
+{
+    "books":[
+        {
+            "id": 1
+            "title: "CIRCE",
+            "author": "Neil Gaiman"
+            "rating": 5
+        },
+        {
+            "id": 2
+            "title: "Lullaby",
+            "author": "Leila Slimani"
+            "rating": 3
+        }
+        {
+            "id": 3
+            "title: "The Great Alone",
+            "author": "Kristin Hannah"
+            "rating": 4
+        }
+    ], 
+    "success":  true,
+    "total_books": 3
+}
+Attributes
+    books - array of hashes.
+        List of available books.
+    
+    id - Integer.
+        Unique identifier for the object.
+
+    title - String.
+        Title of this book
+
+    author - String.
+        Author of this book
+
+    rating - Integer.
+        Rating value of this book
+
+
+Update Book Rating
+
+Endpoint: PATCH /books/{book_id}
+Updates the specified rating value of a book by setting the value of the parameter passed.
+Returns the success value and id of the modified book.
+
+$ curl -X PATCH http://127.0.0.1:5000/books/5 -H "Content-Type: application/json" -d '{"rating":"1"}'
+
+ {
+    "success": True
+    "id": 1
+}
+Attributes
+    sucess - Boolean.
+        Returns True/False.
+    
+    id - Integer.
+        Unique identifier for the object.
+
+
+Endpoint: DELETE /books/{book_id}
+
+Deletes a book of a given ID. Returns a success value, an id of book deleted, a formatted list of 
+remaining books and total number of books.
+
+
+$ curl -X DELETE http://127.0.0.1:5000/books/5
+
+The Books Object:
+ {
+    "success": True
+    "id": 1,
+    "books": [
+        {
+            "id": 1
+            "title: "CIRCE",
+            "author": "Neil Gaiman"
+            "rating": 5
+        },
+        {
+            "id": 2
+            "title: "Lullaby",
+            "author": "Leila Slimani"
+            "rating": 3
+        }
+        {
+            "id": 3
+            "title: "The Great Alone",
+            "author": "Kristin Hannah"
+            "rating": 4
+        }
+    ],
+    "total_books": 3
+}
+Attributes
+    sucess - Boolean.
+        Returns True/False.
+    
+    id - Integer.
+        Unique identifier for the object.
+
+    books - list of objects.
+        List of all books.
+    
+    total_books - Integer.
+        Total amount of books.
+
+
+Endpoint: POST /books
+
+Creates a new book using the submitted title, author and rating. Returns the id of the created book, 
+success value, total books, and book list based on current page number to update the frontend.
+
+$ curl http://127.0.0.1:5000/books?page=3 -X POST -H "Content-Type: application/json"
+  -d '{"title":"Neverwhere", "author":"Neil Gaiman", "rating":"5"}'
+
+{
+  "books": [
+    {
+      "author": "Neil Gaiman",
+      "id": 24,
+      "rating": 5,
+      "title": "Neverwhere"
+    }
+  ],
+  "created": 24,
+  "success": true,
+  "total_books": 17
+}
+
+Attributes
+    books - list of objects.
+        List of object containing details of a books.
+    
+    created - Integer.
+        Unique identifier for the object.
+
+    success - Boolean.
+        Returns True/False.
+    
+    total_books - Integer.
+        Total amount of books.
+
+
+Deployment N/A
+
+Authors
+Iwuh Ikechukwu Daniel
+
+Acknowledgements
+The awesome team at Udacity.
